@@ -1,2 +1,2 @@
-# LealAppTrenosAcademy
+# LealAppTreinosAcademy
 desafio leal apps
