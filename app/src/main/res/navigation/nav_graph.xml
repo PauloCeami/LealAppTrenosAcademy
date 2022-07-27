@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginRegisterFragment">
 
@@ -19,5 +20,21 @@
         <action
             android:id="@+id/action_loggedFragment_to_loginRegisterFragment"
             app:destination="@id/loginRegisterFragment" />
+        <action
+            android:id="@+id/action_loggedFragment_to_listTreinosFragment"
+            app:destination="@id/listTreinosFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/listTreinosFragment"
+        android:name="br.com.pauloceami.treinosacademy.lealapp.views.ListTreinosFragment"
+        android:label="ListTreinosFragment" >
+        <action
+            android:id="@+id/action_listTreinosFragment_to_addTreinoFragment"
+            app:destination="@id/addTreinoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addTreinoFragment"
+        android:name="br.com.pauloceami.treinosacademy.lealapp.views.AddTreinoFragment"
+        android:label="fragment_add_treino"
+        tools:layout="@layout/fragment_add_treino" />
 </navigation>

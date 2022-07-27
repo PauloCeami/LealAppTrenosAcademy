@@ -13,6 +13,14 @@
         android:text="LogOut"
         android:textAllCaps="false" />
 
+    <Button
+        android:id="@+id/btn_list_treinos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Listar Treinos"
+        android:textAllCaps="false" />
+
 
     <TextView
         android:id="@+id/txvLogged"

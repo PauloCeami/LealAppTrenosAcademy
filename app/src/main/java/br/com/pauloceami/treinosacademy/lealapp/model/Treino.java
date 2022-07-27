@@ -10,38 +10,48 @@ public class Treino {
     private String treino_id;
 
     private String nome;
+    private String descricao;
 
     private Date data;
 
     public Treino() {
     }
 
-    public Treino(String nome, Date data) {
+    public Treino(String nome, String descricao, Date data) {
         this.nome = nome;
+        this.descricao = descricao;
         this.data = data;
     }
 
-    public String getId() {
-        return treino_id;
-    }
-
-    public void setId(String id) {
-        this.treino_id = id;
-    }
-
-    public String getNome() {
-        return nome;
+    public void setTreino_id(String treino_id) {
+        this.treino_id = treino_id;
     }
 
     public void setNome(String nome) {
         this.nome = nome;
     }
 
-    public Date getData() {
-        return data;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public void setData(Date data) {
         this.data = data;
+    }
+
+    public String getTreino_id() {
+        return treino_id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public Date getData() {
+        return data;
     }
 }

@@ -59,12 +59,7 @@ public class TreinoRepository {
         void onError(Exception e);
     }
 
-
     public void save(Treino treino) {
-//        Map<String, Object> user = new HashMap<>();
-//        user.put("nome", "Ada");
-//        user.put("descricao", "Lovelace");
-//        user.put("data", FieldValue.serverTimestamp());
         db.collection(COLLECTION_TREINO)
                 .add(treino)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -77,24 +72,6 @@ public class TreinoRepository {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error adding document", e);
-                    }
-                });
-    }
-
-    public void getAllTreinos() {
-        db.collection(COLLECTION_TREINO)
-                //.whereEqualTo("capital", true)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(COLLECTION_TREINO, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.d(COLLECTION_TREINO, "Error getting documents: ", task.getException());
-                        }
                     }
                 });
     }

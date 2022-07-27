@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import br.com.pauloceami.treinosacademy.lealapp.R;
 import br.com.pauloceami.treinosacademy.lealapp.viewmodel.LoggedInViewModel;
 import br.com.pauloceami.treinosacademy.lealapp.viewmodel.LoginRegisterViewModel;
+import br.com.pauloceami.treinosacademy.lealapp.viewmodel.TreinoViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -28,8 +29,11 @@ public class LoggedFragment extends Fragment {
     TextView txvLogged;
     @BindView(R.id.btn_logout)
     Button btn_logout;
+    @BindView(R.id.btn_list_treinos)
+    Button btn_list_treinos;
 
     private LoggedInViewModel loggedInViewModel;
+
 
     @Nullable
     @Override
@@ -41,6 +45,13 @@ public class LoggedFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 loggedInViewModel.logOut();
+            }
+        });
+
+        btn_list_treinos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(getView()).navigate(R.id.listTreinosFragment);
             }
         });
 

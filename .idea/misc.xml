@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/drawable/ic_add.xml" value="0.359" />
         <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/activity_main.xml" value="0.26510416666666664" />
+        <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/fragment_add_treino.xml" value="0.26614583333333336" />
         <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/fragment_list_treinos.xml" value="0.2875" />
         <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/fragment_logged.xml" value="0.2640625" />
         <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/fragment_loginregister.xml" value="0.365625" />
