@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "162703399635",
+    "project_id": "lealapp-trenos-academy",
+    "storage_bucket": "lealapp-trenos-academy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162703399635:android:a3e39ea9e2a3dabb6e1226",
+        "android_client_info": {
+          "package_name": "br.com.pauloceami.treinosacademy.lealapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "162703399635-cgr5v9i24804ljgkls8j762g31snfa18.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.pauloceami.treinosacademy.lealapp",
+            "certificate_hash": "68aab7d9f04324c9a4cd1377abb707c4a0d4b1c8"
+          }
+        },
+        {
+          "client_id": "162703399635-cvjn1gpbvqgejuqujbe1sbt3p4da435m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUIWCkcMS8ykv1tA_VbwU4yFkjhsQY4T0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "162703399635-cvjn1gpbvqgejuqujbe1sbt3p4da435m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

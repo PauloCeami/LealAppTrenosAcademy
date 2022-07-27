@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginRegisterFragment">
+
+    <fragment
+        android:id="@+id/loginRegisterFragment"
+        android:name="br.com.pauloceami.treinosacademy.lealapp.views.LoginRegisterFragment"
+        android:label="LoginRegisterFragment" >
+        <action
+            android:id="@+id/action_loginRegisterFragment_to_loggedFragment"
+            app:destination="@id/loggedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loggedFragment"
+        android:name="br.com.pauloceami.treinosacademy.lealapp.views.LoggedFragment"
+        android:label="LoggedFragment" >
+        <action
+            android:id="@+id/action_loggedFragment_to_loginRegisterFragment"
+            app:destination="@id/loginRegisterFragment" />
+    </fragment>
+</navigation>

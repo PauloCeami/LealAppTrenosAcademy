@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="4dp">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txv_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="150"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txv_nome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Treino de Braço"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txv_descricao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Os cards são exibidos na tela com uma elevação padrão, fazendo com que o sistema exiba uma sombra abaixo deles. Você pode fornecer uma elevação personalizada para um card com o atributo card_view:cardElevation. Isso criará uma sombra mais pronunciada com uma elevação maior, enquanto uma elevação mais baixa resultará em uma sombra mais clara. CardView usa a elevação real e sombras dinâmicas no Android 5.0 (API de nível 21) e versões mais recentes, mas usa uma implementação de sombra programática em versões anteriores." />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
