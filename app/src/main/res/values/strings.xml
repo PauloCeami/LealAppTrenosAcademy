@@ -9,4 +9,15 @@
     <string name="salvando_treino">salvando treino...</string>
     <string name="treino">Treino</string>
     <string name="atualizando_treino">atualizando treino...</string>
+
+    <string name="title_home">Treinos Academy - HOME</string>
+    <string name="subtitle_home">Nossos Treinos e Exercícios - MVVM</string>
+
+    <string name="title_listtreinos">Treinos Academy - LISTA</string>
+    <string name="subtitle_listtreinos">Atualize | Exclua | Cadastre - MVVM</string>
+
+
+    <string name="title_cadastrotreino">Treinos Academy - CADASTRO</string>
+    <string name="subtitle_cadastrotreino">Cadastro de Treino - MVVM</string>
+
 </resources>

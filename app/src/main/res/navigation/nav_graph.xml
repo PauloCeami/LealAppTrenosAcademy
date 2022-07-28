@@ -4,14 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginRegisterFragment">
-
-
     <fragment
         android:id="@+id/loginRegisterFragment"
         android:name="br.com.pauloceami.treinosacademy.lealapp.Views.LoginRegisterFragment"
-        android:label="LoginRegisterFragment" >
+        android:label="loginRegisterFragment" >
         <action
-            android:id="@+id/action_loginRegisterFragment_to_homeFragment"
+            android:id="@+id/action_loginRegisterFragment_to_homeFragment3"
             app:destination="@id/homeFragment" />
     </fragment>
     <fragment
@@ -19,19 +17,40 @@
         android:name="br.com.pauloceami.treinosacademy.lealapp.Views.HomeFragment"
         android:label="HomeFragment" >
         <action
-            android:id="@+id/action_homeFragment_to_addTreinoFragment"
-            app:destination="@id/addTreinoFragment" />
+            android:id="@+id/action_homeFragment_to_loginRegisterFragment2"
+            app:destination="@id/loginRegisterFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_loginRegisterFragment"
+            android:id="@+id/action_homeFragment_to_listTreinos"
+            app:destination="@id/listTreinos" />
+        <action
+            android:id="@+id/action_homeFragment_to_cadastroExercicio"
+            app:destination="@id/cadastroExercicio" />
+    </fragment>
+    <fragment
+        android:id="@+id/listTreinos"
+        android:name="br.com.pauloceami.treinosacademy.lealapp.Views.ListTreinosFragment"
+        android:label="ListTreinosFragment" >
+        <action
+            android:id="@+id/action_listTreinos_to_cadastroTreinoFragment"
+            app:destination="@id/cadastroTreinoFragment" />
+        <action
+            android:id="@+id/action_listTreinos_to_loginRegisterFragment"
             app:destination="@id/loginRegisterFragment" />
     </fragment>
     <fragment
-        android:id="@+id/addTreinoFragment"
-        android:name="br.com.pauloceami.treinosacademy.lealapp.Views.TreinoFragment"
-        android:label="Adicionar Treinos"
-        tools:layout="@layout/fragment_addtreino" >
+        android:id="@+id/cadastroTreinoFragment"
+        android:name="br.com.pauloceami.treinosacademy.lealapp.Views.CadastroTreinoFragment"
+        android:label="CadastroTreinoFragment" >
         <action
-            android:id="@+id/action_addTreinoFragment_to_loginRegisterFragment"
+            android:id="@+id/action_cadastroTreinoFragment_to_loginRegisterFragment"
+            app:destination="@id/loginRegisterFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cadastroExercicio"
+        android:name="br.com.pauloceami.treinosacademy.lealapp.Views.CadastroExercicio"
+        android:label="CadastroExercicio" >
+        <action
+            android:id="@+id/action_cadastroExercicio_to_loginRegisterFragment"
             app:destination="@id/loginRegisterFragment" />
     </fragment>
 </navigation>

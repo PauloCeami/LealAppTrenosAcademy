@@ -52,8 +52,6 @@ public class HomeFragment extends Fragment {
     @BindView(R.id.recycler_view_treinos)
     RecyclerView recycler_view_treinos;
     private List<Treino> mListTreinos;
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
 
 
     @Nullable
@@ -63,18 +61,12 @@ public class HomeFragment extends Fragment {
         ButterKnife.bind(this, v);
 
         setHasOptionsMenu(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Treinos Academy");
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("Lista de Treinos - MVVM Architecture");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.title_home);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.subtitle_home);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
         Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(upArrow);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Navigation.findNavController(getView()).navigate(R.id.addTreinoFragment);
-            }
-        });
 
 
         return v;
@@ -86,9 +78,7 @@ public class HomeFragment extends Fragment {
         mListTreinos = new ArrayList<>();
         adapter = new TreinosAdapter();
 
-        RecyclerView.ItemDecoration decoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         recycler_view_treinos.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler_view_treinos.addItemDecoration(decoration);
         recycler_view_treinos.setHasFixedSize(true);
         recycler_view_treinos.setAdapter(adapter);
 
@@ -100,45 +90,7 @@ public class HomeFragment extends Fragment {
                             @Override
                             public void onItemClick(View view, int position) {
                                 Treino t = mListTreinos.get(position);
-                                final CharSequence[] dialogItem = {"Atualizar", "Excluir"};
-                                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-
-                                dialog.setItems(dialogItem, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        switch (i) {
-                                            case 0:
-                                                Bundle bundle = new Bundle();
-                                                bundle.putString("nome", t.getNome());
-                                                bundle.putString("descricao", t.getDescricao());
-                                                bundle.putSerializable("treino", t);
-                                                navController.navigate(R.id.addTreinoFragment, bundle);
-                                                break;
-                                            case 1:
-
-                                                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        switch (which) {
-                                                            case DialogInterface.BUTTON_POSITIVE:
-                                                                treinoViewModel.delete(t.getTreino_id());
-                                                                treinoViewModel.getData();
-                                                                break;
-
-                                                            case DialogInterface.BUTTON_NEGATIVE:
-                                                                dialog.dismiss();
-                                                                break;
-                                                        }
-                                                    }
-                                                };
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                                builder.setMessage("Excluir " + t.getNome() + " ?").setPositiveButton("Sim", dialogClickListener)
-                                                        .setNegativeButton("Não", dialogClickListener).show();
-                                                break;
-                                        }
-                                    }
-                                });
-                                dialog.show();
+                                Toast.makeText(getContext(), "mostrar exercicios do treino", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
@@ -161,9 +113,11 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+        treinoViewModel = new ViewModelProvider(this).get(TreinoViewModel.class);
+        loggedInViewModel = new ViewModelProvider(this).get(LoggedInViewModel.class);
+
 
         // observer para mutações em register and login
-        loggedInViewModel = new ViewModelProvider(this).get(LoggedInViewModel.class);
         loggedInViewModel.getUserMutableLiveData().observe(this, new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
@@ -173,19 +127,16 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         // observer is logged
         loggedInViewModel.getLogOutMutableLiveData().observe(this, new Observer<Boolean>() {
             @Override
-            public void onChanged(Boolean isLogged) {
-                if (isLogged) {
-                    Navigation.findNavController(getView()).navigate(R.id.loginRegisterFragment);
+            public void onChanged(Boolean isLogout) {
+                if (isLogout) {
+                    navController.navigate(R.id.loginRegisterFragment);
                 }
             }
         });
 
-
-        treinoViewModel = new ViewModelProvider(this).get(TreinoViewModel.class);
         // is deleted ?
         treinoViewModel.getIsDeleted().observe(this, new Observer<Boolean>() {
             @Override
@@ -220,9 +171,10 @@ public class HomeFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.addTReinos:
-                Navigation.findNavController(getView()).navigate(R.id.addTreinoFragment);
+                navController.navigate(R.id.listTreinos);
                 return true;
             case R.id.addExercicios:
+                navController.navigate(R.id.cadastroExercicio);
                 return true;
             case R.id.LogOut:
                 loggedInViewModel.logOut();

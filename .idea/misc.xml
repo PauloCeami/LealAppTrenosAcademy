@@ -7,12 +7,17 @@
         <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/drawable/ic_arrow_custom_24dp.xml" value="0.3675" />
         <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/activity_main.xml" value="0.26510416666666664" />
         <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/fragment_add_treino.xml" value="0.26614583333333336" />
+        <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/fragment_cadastro_exercicio.xml" value="0.365625" />
+        <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/fragment_cadastro_treino.xml" value="0.36666666666666664" />
+        <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/fragment_home.xml" value="0.29583333333333334" />
         <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/fragment_list_treinos.xml" value="0.2875" />
+        <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/fragment_listtreinos.xml" value="0.29583333333333334" />
         <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/fragment_logged.xml" value="0.2640625" />
         <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/fragment_loginregister.xml" value="0.365625" />
         <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/toolbar.xml" value="0.36666666666666664" />
         <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/layout/treinos_item.xml" value="0.2864583333333333" />
         <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/menu/menu_cad_treinos.xml" value="0.36666666666666664" />
+        <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/menu/menu_list_treinos.xml" value="0.2796875" />
         <entry key="..\:/ANDROID-STUDIO/LealAppTrenosAcademy/app/src/main/res/menu/menu_main.xml" value="0.365625" />
       </map>
     </option>
