@@ -9,7 +9,7 @@
         android:id="@+id/recycler_view_treinos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/treinos_item" />
+        tools:listitem="@layout/adapter_treinoitem" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

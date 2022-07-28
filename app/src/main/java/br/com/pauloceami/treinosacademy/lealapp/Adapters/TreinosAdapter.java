@@ -8,16 +8,32 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.Timestamp;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import br.com.pauloceami.treinosacademy.lealapp.R;
-import br.com.pauloceami.treinosacademy.lealapp.model.Treino;
+import br.com.pauloceami.treinosacademy.lealapp.Model.Treino;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TreinosAdapter extends RecyclerView.Adapter<TreinosAdapter.MyViewHolder> {
 
     private List<Treino> treinoList;
+
+    private Dialog dialog;
+
+    public interface Dialog {
+        void onClick(int pos);
+    }
+
+    public void setDialog(Dialog dialog) {
+        this.dialog = dialog;
+    }
 
     public void setTreinoList(List<Treino> treinoList) {
         this.treinoList = treinoList;
@@ -26,7 +42,7 @@ public class TreinosAdapter extends RecyclerView.Adapter<TreinosAdapter.MyViewHo
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        View itemLista = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.treinos_item, viewGroup, false);
+        View itemLista = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_treinoitem, viewGroup, false);
         return new MyViewHolder(itemLista);
     }
 
@@ -35,7 +51,10 @@ public class TreinosAdapter extends RecyclerView.Adapter<TreinosAdapter.MyViewHo
         Treino t = treinoList.get(position);
         holder.txv_nome.setText(t.getNome());
         holder.txv_descricao.setText(t.getDescricao());
-        holder.txv_data.setText(t.getData().toString());
+
+        Long d = t.getData().getSeconds();
+        Date de = new Date(d * 1000);
+        holder.txv_data.setText(de.toString());
 
 //        Picasso.get()
 //                .load(urlImage)
@@ -62,6 +81,15 @@ public class TreinosAdapter extends RecyclerView.Adapter<TreinosAdapter.MyViewHo
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (dialog != null) {
+                        dialog.onClick(getLayoutPosition());
+                    }
+                }
+            });
         }
 
     }

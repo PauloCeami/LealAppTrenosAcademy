@@ -1,4 +1,4 @@
-package br.com.pauloceami.treinosacademy.lealapp.model;
+package br.com.pauloceami.treinosacademy.lealapp.Repository;
 
 import android.app.Application;
 import android.os.Build;

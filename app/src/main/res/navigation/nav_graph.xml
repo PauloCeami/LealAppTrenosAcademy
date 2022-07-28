@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/loginRegisterFragment"
-        android:name="br.com.pauloceami.treinosacademy.lealapp.views.LoginRegisterFragment"
+        android:name="br.com.pauloceami.treinosacademy.lealapp.Views.LoginRegisterFragment"
         android:label="LoginRegisterFragment" >
         <action
             android:id="@+id/action_loginRegisterFragment_to_homeFragment"
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="br.com.pauloceami.treinosacademy.lealapp.views.HomeFragment"
+        android:name="br.com.pauloceami.treinosacademy.lealapp.Views.HomeFragment"
         android:label="HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_addTreinoFragment"
@@ -27,9 +27,9 @@
     </fragment>
     <fragment
         android:id="@+id/addTreinoFragment"
-        android:name="br.com.pauloceami.treinosacademy.lealapp.views.TreinoFragment"
+        android:name="br.com.pauloceami.treinosacademy.lealapp.Views.TreinoFragment"
         android:label="Adicionar Treinos"
-        tools:layout="@layout/fragment_add_treino" >
+        tools:layout="@layout/fragment_addtreino" >
         <action
             android:id="@+id/action_addTreinoFragment_to_loginRegisterFragment"
             app:destination="@id/loginRegisterFragment" />

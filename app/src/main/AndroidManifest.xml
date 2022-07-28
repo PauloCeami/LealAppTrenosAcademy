@@ -14,7 +14,7 @@
         android:theme="@style/Theme.LealAppTrenosAcademy"
         tools:targetApi="31">
         <activity
-            android:name=".views.MainActivity"
+            android:name=".Views.MainActivity"
             android:label="Treinos Academy MVVM"
             android:exported="true">
             <intent-filter>

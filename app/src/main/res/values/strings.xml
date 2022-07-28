@@ -6,4 +6,7 @@
     <string name="descricao_do_treino">descricao do treino</string>
     <string name="nome_do_treino">nome do treino</string>
     <string name="cadastrar_treino">Cadastrar treino</string>
+    <string name="salvando_treino">salvando treino...</string>
+    <string name="treino">Treino</string>
+    <string name="atualizando_treino">atualizando treino...</string>
 </resources>

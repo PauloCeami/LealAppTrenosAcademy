@@ -1,4 +1,4 @@
-package br.com.pauloceami.treinosacademy.lealapp.views;
+package br.com.pauloceami.treinosacademy.lealapp.Views;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,7 +19,7 @@ import androidx.navigation.Navigation;
 import com.google.firebase.auth.FirebaseUser;
 
 import br.com.pauloceami.treinosacademy.lealapp.R;
-import br.com.pauloceami.treinosacademy.lealapp.viewmodel.LoginRegisterViewModel;
+import br.com.pauloceami.treinosacademy.lealapp.ViewModels.LoginRegisterViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

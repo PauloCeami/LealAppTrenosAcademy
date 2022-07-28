@@ -1,8 +1,12 @@
-package br.com.pauloceami.treinosacademy.lealapp.views;
+package br.com.pauloceami.treinosacademy.lealapp.Views;
 
+import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.ArrayMap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,23 +20,27 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.firebase.Timestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import br.com.pauloceami.treinosacademy.lealapp.R;
-import br.com.pauloceami.treinosacademy.lealapp.model.Treino;
-import br.com.pauloceami.treinosacademy.lealapp.viewmodel.LoggedInViewModel;
-import br.com.pauloceami.treinosacademy.lealapp.viewmodel.TreinoViewModel;
+import br.com.pauloceami.treinosacademy.lealapp.Model.Treino;
+import br.com.pauloceami.treinosacademy.lealapp.ViewModels.LoggedInViewModel;
+import br.com.pauloceami.treinosacademy.lealapp.ViewModels.TreinoViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class TreinoFragment extends Fragment implements View.OnClickListener {
 
+    public static final String TAG = "LealApp";
     private LoggedInViewModel loggedInViewModel;
     private TreinoViewModel treinoViewModel;
     @BindView(R.id.btn_cadastrar)
@@ -41,6 +49,9 @@ public class TreinoFragment extends Fragment implements View.OnClickListener {
     EditText edit_nome;
     @BindView(R.id.edit_descricao)
     EditText edit_descricao;
+    private Treino mTreino = null;
+
+    ProgressDialog progressDialog = null;
 
     public TreinoFragment() {
         // Required empty public constructor
@@ -49,22 +60,57 @@ public class TreinoFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        progressDialog = new ProgressDialog(getContext());
         loggedInViewModel = new ViewModelProvider(this).get(LoggedInViewModel.class);
         treinoViewModel = new ViewModelProvider(this).get(TreinoViewModel.class);
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            mTreino = (Treino) bundle.getSerializable("treino");
+        }
+
+        // observer is saved ?
+        treinoViewModel.getIsSavedMutableLiveData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean is_treino_saved) {
+                if (is_treino_saved) {
+                    Log.i(TAG, "getIsSavedMutableLiveData SAVED");
+                    Toast.makeText(getContext(), "Treino cadastrado", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(getView()).navigate(R.id.homeFragment);
+                    progressDialog.dismiss();
+                } else {
+                    Log.i(TAG, "getIsSavedMutableLiveData NOT SAVED");
+                    progressDialog.dismiss();
+                    Toast.makeText(getContext(), "Não foi possível salvar o registro, tente novamente", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_add_treino, container, false);
+        View v = inflater.inflate(R.layout.fragment_addtreino, container, false);
         ButterKnife.bind(this, v);
+
         btn_cadastrar.setOnClickListener(this);
         setHasOptionsMenu(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Treinos Academy");
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("Cadastro de Treinos - MVVM Architecture");
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
-        Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow_custom_24dp);
+        Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+        if (mTreino != null) {
+            btn_cadastrar.setText("Atualizar treino");
+            edit_nome.setText(mTreino.getNome());
+            edit_descricao.setText(mTreino.getDescricao());
+        }
+
         return v;
     }
 
@@ -94,16 +140,32 @@ public class TreinoFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+
         String nome = edit_nome.getText().toString();
         String descr = edit_descricao.getText().toString();
         if (!TextUtils.isEmpty(nome) && !TextUtils.isEmpty(descr)) {
+
+            progressDialog.setCancelable(false);
+            progressDialog.setTitle(R.string.treino);
+
             Treino t = new Treino();
             t.setNome(nome);
             t.setDescricao(descr);
-            t.setData(new Timestamp(new Date()));
-            treinoViewModel.save(t);
-            Toast.makeText(getContext(), "Treino cadastrado", Toast.LENGTH_SHORT).show();
-            Navigation.findNavController(getView()).navigate(R.id.homeFragment);
+
+            if (mTreino != null) {
+                //update
+                progressDialog.setMessage(getString(R.string.atualizando_treino));
+                progressDialog.show();
+                t.setTreino_id(mTreino.getTreino_id());
+                t.setData(mTreino.getData());
+                treinoViewModel.update(t);
+            } else {
+                //save
+                progressDialog.setMessage(getString(R.string.salvando_treino));
+                progressDialog.show();
+                t.setData(new Timestamp(new Date()));
+                treinoViewModel.save(t);
+            }
         } else {
             Toast.makeText(getContext(), "Informe dados nos campos", Toast.LENGTH_SHORT).show();
         }

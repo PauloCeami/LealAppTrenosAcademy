@@ -1,4 +1,4 @@
-package br.com.pauloceami.treinosacademy.lealapp.views;
+package br.com.pauloceami.treinosacademy.lealapp.Views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
