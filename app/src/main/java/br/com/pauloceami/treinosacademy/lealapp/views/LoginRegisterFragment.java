@@ -44,8 +44,7 @@ public class LoginRegisterFragment extends Fragment {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
                 if (firebaseUser != null) {
-                    Navigation.findNavController(getView()).navigate(R.id.loggedFragment);
-                    Toast.makeText(getContext(), "Usuário registrado...", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(getView()).navigate(R.id.homeFragment);
                 }
             }
         });

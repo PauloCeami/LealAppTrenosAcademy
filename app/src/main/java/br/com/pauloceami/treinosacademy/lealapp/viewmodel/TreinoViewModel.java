@@ -20,6 +20,11 @@ public class TreinoViewModel extends ViewModel implements TreinoRepository.onFir
         treinoRepository.getTreinoData();
     }
 
+    public void save(Treino t) {
+        treinoRepository.save(t);
+    }
+
+
     @Override
     public void treinoDataAdded(List<Treino> treinos) {
         listLiveData.postValue(treinos);
