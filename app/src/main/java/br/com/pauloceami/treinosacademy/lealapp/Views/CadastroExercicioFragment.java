@@ -1,5 +1,10 @@
 package br.com.pauloceami.treinosacademy.lealapp.Views;
 
+import static br.com.pauloceami.treinosacademy.lealapp.Utils.Util.EXERCICIO_SERIALIZABLE;
+import static br.com.pauloceami.treinosacademy.lealapp.Utils.Util.FOLDERNAME_STORAGE;
+import static br.com.pauloceami.treinosacademy.lealapp.Utils.Util.TAG_LEALAPPS;
+import static br.com.pauloceami.treinosacademy.lealapp.Utils.Util.getStringHash;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -34,19 +39,16 @@ import androidx.navigation.Navigation;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import br.com.pauloceami.treinosacademy.lealapp.Adapters.SpinnerAdapter;
 import br.com.pauloceami.treinosacademy.lealapp.Model.Exercicio;
@@ -61,7 +63,7 @@ import butterknife.ButterKnife;
 
 public class CadastroExercicioFragment extends Fragment implements View.OnClickListener {
 
-    public static final String TAG = "LealApp";
+
     private NavController navController;
     private LoggedInViewModel loggedInViewModel;
     private ExercicioViewModel exercicioViewModel;
@@ -90,14 +92,18 @@ public class CadastroExercicioFragment extends Fragment implements View.OnClickL
     private UploadTask mUpload;
     private List<Uri> mFotoUriProfileUserChangeList = new ArrayList<>();
     private Uri mUriFotoFirebase;
+    private Exercicio mExercicio = null;
+    private boolean TROCOU_IMAGEM = false;
 
-
-    private int mEnviandoCadastro = 0; // 0=nada foi feito  1=iniciou o envio    3=enviada
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            mExercicio = (Exercicio) bundle.getSerializable(EXERCICIO_SERIALIZABLE);
+        }
 
         progressDialog = new ProgressDialog(getContext());
         mFirebaseStorage = FirebaseStorage.getInstance().getReference();
@@ -105,7 +111,7 @@ public class CadastroExercicioFragment extends Fragment implements View.OnClickL
 
         exercicioViewModel = new ViewModelProvider(
                 this,
-                new ExercicioViewModel("NENHUM_ARGUMENTO_AQUI"))
+                new ExercicioViewModel("NOT_ARGMENTS_HERE"))
                 .get(ExercicioViewModel.class);
 
 
@@ -144,12 +150,12 @@ public class CadastroExercicioFragment extends Fragment implements View.OnClickL
             @Override
             public void onChanged(Boolean is_treino_saved) {
                 if (is_treino_saved) {
-                    Log.i(TAG, "getIsSavedMutableLiveData SAVED");
-                    Toast.makeText(getContext(), "Treino cadastrado", Toast.LENGTH_SHORT).show();
-                    navController.navigate(R.id.listTreinos);
+                    Log.i(TAG_LEALAPPS, "getIsSavedMutableLiveData SAVED");
+                    Toast.makeText(getContext(), "Exercício cadastrado com sucesso", Toast.LENGTH_SHORT).show();
+                    navController.navigate(R.id.homeFragment);
                     progressDialog.dismiss();
                 } else {
-                    Log.i(TAG, "getIsSavedMutableLiveData NOT SAVED");
+                    Log.i(TAG_LEALAPPS, "getIsSavedMutableLiveData NOT SAVED");
                     progressDialog.dismiss();
                     Toast.makeText(getContext(), "Não foi possível salvar o registro, tente novamente", Toast.LENGTH_SHORT).show();
                 }
@@ -167,12 +173,29 @@ public class CadastroExercicioFragment extends Fragment implements View.OnClickL
 
         imv_exercicio.setOnClickListener(this);
         setHasOptionsMenu(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.title_cadastro_exercicio);
+
+        if (mExercicio != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.title_update_exercicio);
+        } else {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.title_cadastro_exercicio);
+        }
+
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(getString(R.string.subtitle_cadastro_exercicio));
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
         Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+
+        if (mExercicio != null) {
+            btn_cadastrar_exercicio.setText("Atualizar exercício");
+            edit_nome_exercicio.setText(mExercicio.getNome());
+            edit_observacao_exercicio.setText(mExercicio.getObservacao());
+            Picasso.get()
+                    .load(mExercicio.getImage())
+                    .error(R.drawable.img_exercicio)
+                    .into(imv_exercicio);
+        }
 
         btn_cadastrar_exercicio.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,16 +205,14 @@ public class CadastroExercicioFragment extends Fragment implements View.OnClickL
                     return;
                 }
 
-                saveFotoFirebaseStorage();
+                saveDataFirestore();
             }
         });
-
 
         return v;
     }
 
-    private boolean isValid() {
-
+    public boolean isValid() {
         String nome = edit_nome_exercicio.getText().toString();
         String observacao = edit_observacao_exercicio.getText().toString();
 
@@ -199,11 +220,16 @@ public class CadastroExercicioFragment extends Fragment implements View.OnClickL
             return false;
         }
 
+        // se tiver atualizando mas nao quero trocar a imagem,
+        // deve-se pegar a imagem do objeto e alimentar a var para passar o isValid
+        if (mExercicio != null && !TROCOU_IMAGEM) {
+            mListadeFotosInterna.add("NOT_IMAGE");
+        }
+
         if (mListadeFotosInterna.isEmpty() || mListadeFotosInterna == null || mListadeFotosInterna.size() <= 0) {
             Toast.makeText(getContext(), "selecione a foto", Toast.LENGTH_LONG).show();
             return false;
         }
-
 
         if (mListadeFotosInterna.size() < 1) {
             Toast.makeText(getContext(), "Selecione a foto", Toast.LENGTH_LONG).show();
@@ -212,6 +238,7 @@ public class CadastroExercicioFragment extends Fragment implements View.OnClickL
 
         return true;
     }
+
 
     public void escolherImagem(int requestcode) {
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -222,37 +249,53 @@ public class CadastroExercicioFragment extends Fragment implements View.OnClickL
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
+            TROCOU_IMAGEM = true;
             Uri imagemSelecionada = data.getData();
             String pathImageDevice = imagemSelecionada.toString();
-
             if (requestCode == 1) {
                 imv_exercicio.setImageURI(imagemSelecionada);
             }
             mListadeFotosInterna.add(pathImageDevice);
+        } else {
+            TROCOU_IMAGEM = false;
         }
     }
 
-    private void saveFotoFirebaseStorage() {
+    private void saveDataFirestore() {
 
         progressDialog.setCancelable(false);
         progressDialog.setTitle(R.string.aguarde);
         progressDialog.show();
 
-        int mTamanhoListaFotos = mListadeFotosInterna.size();
-        for (int i = 0; i < mListadeFotosInterna.size(); i++) {
-            String urlImagem = mListadeFotosInterna.get(i);
-            salvarFotoStorage(urlImagem, mTamanhoListaFotos, i);
+        if (TROCOU_IMAGEM) {
+            // se trocar imagem deve-se enviar pro firestore
+            int mTamanhoListaFotos = mListadeFotosInterna.size();
+            for (int i = 0; i < mListadeFotosInterna.size(); i++) {
+                String urlImagem = mListadeFotosInterna.get(i);
+                enviarImagemFireStore(urlImagem, mTamanhoListaFotos, i);
+            }
+        } else {
+            // se não trocou a imagem, continue usar a url da imagem que está no objeto sem upload
+            atualizarExercicio(mExercicio.getImage());
         }
     }
 
-    private void salvarFotoStorage(String urlImagemString, int mTamanhoListaFotos, int i) {
-        String[] nome = "imagem_exercicios".split(" ");
-        Random rand = new Random();
-        Integer id = rand.nextInt(1000000000);
-        String nomes = nome[0].replace(" ", "") + id.toString();
-        StorageReference mFotoUsuario = mFirebaseStorage.child("imagens")
-                .child(nomes.toLowerCase() + "_" + i);
-        mUpload = mFotoUsuario.putFile(Uri.parse(urlImagemString));
+    private void atualizarExercicio(String uri_image) {
+        Exercicio e = new Exercicio();
+        e.setExercicio_id(mExercicio.getExercicio_id());
+        e.setNome(edit_nome_exercicio.getText().toString());
+        e.setObservacao(edit_observacao_exercicio.getText().toString());
+        e.setTreino_id(TREINO_SELECTED_ID);
+        e.setImage(uri_image);
+        exercicioViewModel.update(e);
+    }
+
+    private void enviarImagemFireStore(String urlImagemString, int mTamanhoListaFotos, int i) {
+
+        String nome_image = getStringHash(getContext(), String.valueOf(new java.sql.Date(System.currentTimeMillis())));
+        StorageReference mImageExercicio = mFirebaseStorage.child(FOLDERNAME_STORAGE)
+                .child(nome_image + "_" + i);
+        mUpload = mImageExercicio.putFile(Uri.parse(urlImagemString));
         mUpload.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -260,7 +303,7 @@ public class CadastroExercicioFragment extends Fragment implements View.OnClickL
                 if (!task.isSuccessful()) {
                     throw task.getException();
                 }
-                return mFotoUsuario.getDownloadUrl();
+                return mImageExercicio.getDownloadUrl();
             }
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
@@ -268,14 +311,23 @@ public class CadastroExercicioFragment extends Fragment implements View.OnClickL
                 progressDialog.dismiss();
                 if (task.isSuccessful()) {
                     mUriFotoFirebase = task.getResult();
-                    Exercicio e = new Exercicio();
-                    e.setNome(edit_nome_exercicio.getText().toString());
-                    e.setObservacao(edit_observacao_exercicio.getText().toString());
-                    e.setTreino_id(TREINO_SELECTED_ID);
-                    e.setImage(mUriFotoFirebase.toString());
-                    exercicioViewModel.save(e);
-                }
 
+                    if (mExercicio != null) {
+                        if (TROCOU_IMAGEM) {
+                            atualizarExercicio(mUriFotoFirebase.toString());
+                        } else {
+                            atualizarExercicio(mExercicio.getImage());
+                        }
+                    } else {
+                        // save
+                        Exercicio e = new Exercicio();
+                        e.setNome(edit_nome_exercicio.getText().toString());
+                        e.setObservacao(edit_observacao_exercicio.getText().toString());
+                        e.setTreino_id(TREINO_SELECTED_ID);
+                        e.setImage(mUriFotoFirebase.toString());
+                        exercicioViewModel.save(e);
+                    }
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -353,6 +405,7 @@ public class CadastroExercicioFragment extends Fragment implements View.OnClickL
             case R.id.imv_exercicio:
                 escolherImagem(1);
                 break;
+
         }
     }
 }

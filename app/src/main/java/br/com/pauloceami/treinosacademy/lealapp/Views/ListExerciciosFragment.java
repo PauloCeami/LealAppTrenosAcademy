@@ -1,9 +1,12 @@
 package br.com.pauloceami.treinosacademy.lealapp.Views;
 
-import android.app.Application;
+import static br.com.pauloceami.treinosacademy.lealapp.Utils.Util.EXERCICIO_SERIALIZABLE;
+import static br.com.pauloceami.treinosacademy.lealapp.Utils.Util.TREINO_SERIALIZABLE;
+
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -57,14 +60,15 @@ public class ListExerciciosFragment extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mTreino = (Treino) bundle.getSerializable("treino");
+            mTreino = (Treino) bundle.getSerializable(TREINO_SERIALIZABLE);
         }
+
 
         navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
 
         exercicioViewModel = new ViewModelProvider(
                 this,
-                new ExercicioViewModel(mTreino.getTreino_id()))
+                new ExercicioViewModel(mTreino.getTreino_id().trim()))
                 .get(ExercicioViewModel.class);
 
 
@@ -104,6 +108,13 @@ public class ListExerciciosFragment extends Fragment {
         exercicioViewModel.getListMutableLiveData().observe(this, new Observer<List<Exercicio>>() {
             @Override
             public void onChanged(List<Exercicio> exercicios) {
+
+                if (exercicios.isEmpty() || exercicios == null) {
+                    navController.navigate(R.id.homeFragment);
+                    Toast.makeText(getContext(), "Nenhum Exercício encontrado para : " + mTreino.getNome().toUpperCase(), Toast.LENGTH_SHORT).show();
+                }
+
+                exercicioList.clear();
                 exercicioList = exercicios;
                 adapter.setTreinoList(exercicios);
                 adapter.notifyDataSetChanged();
@@ -154,8 +165,8 @@ public class ListExerciciosFragment extends Fragment {
                                         switch (i) {
                                             case 0:
                                                 Bundle bundle = new Bundle();
-                                                bundle.putSerializable("exercicio", e);
-                                                navController.navigate(R.id.cadastroTreinoFragment, bundle);
+                                                bundle.putSerializable(EXERCICIO_SERIALIZABLE, e);
+                                                navController.navigate(R.id.cadastroExercicio, bundle);
                                                 break;
                                             case 1:
 
@@ -164,8 +175,8 @@ public class ListExerciciosFragment extends Fragment {
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         switch (which) {
                                                             case DialogInterface.BUTTON_POSITIVE:
-                                                                //treinoViewModel.delete(t.getTreino_id());
-                                                                //treinoViewModel.getData();
+                                                                exercicioViewModel.delete(e.getExercicio_id());
+                                                                navController.navigate(R.id.homeFragment);
                                                                 break;
 
                                                             case DialogInterface.BUTTON_NEGATIVE:

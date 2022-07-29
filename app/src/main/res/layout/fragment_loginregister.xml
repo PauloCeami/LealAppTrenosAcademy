@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -41,8 +42,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="70dp"
+        android:layout_marginBottom="20dp"
         android:text="pauloceami@gmail.com | github.com/PauloCeami"
         android:textAlignment="center"
         android:textColor="#AAAAAA"
         android:textSize="12sp" />
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imv_imagem"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:src="@drawable/lealapp" />
 </androidx.appcompat.widget.LinearLayoutCompat>

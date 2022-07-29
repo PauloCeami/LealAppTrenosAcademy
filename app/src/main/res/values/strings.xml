@@ -19,6 +19,7 @@
     <string name="subtitle_listtreinos">Atualize | Exclua | Cadastre - MVVM</string>
 
     <string name="title_cadastro_exercicio">Treino Academy - CADASTRO</string>
+    <string name="title_update_exercicio">Treino Academy - ATUALIZAR</string>
     <string name="subtitle_cadastro_exercicio">Cadastro Exercício - MVVM</string>
     <string name="title_listexercicio">Treinos Academy - LISTA</string>
     <string name="subtitle_listexercicio">Atualize | Exclua | Cadastre - MVVM</string>

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.List;
 
 import br.com.pauloceami.treinosacademy.lealapp.Model.Exercicio;
+import br.com.pauloceami.treinosacademy.lealapp.Model.Treino;
 import br.com.pauloceami.treinosacademy.lealapp.Repository.ExercicioRepository;
 
 public class ExercicioViewModel extends ViewModel implements ExercicioRepository.onFireStoreTaskComplete, ViewModelProvider.Factory {
@@ -30,6 +31,15 @@ public class ExercicioViewModel extends ViewModel implements ExercicioRepository
     public void save(Exercicio exercicio) {
         exercicioRepository.save(exercicio);
     }
+
+    public void update(Exercicio e) {
+        exercicioRepository.update(e);
+    }
+
+    public void delete(String idDocument) {
+        exercicioRepository.delete(idDocument);
+    }
+
 
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {

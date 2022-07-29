@@ -29,7 +29,6 @@ public class UserAuthRepository {
         logOutMutableLiveData = new MutableLiveData<>();
 
         if (firebaseAuth.getCurrentUser() != null) {
-            // avisando os oberserves
             userMutableLiveData.postValue(firebaseAuth.getCurrentUser());
             logOutMutableLiveData.postValue(false);
         }

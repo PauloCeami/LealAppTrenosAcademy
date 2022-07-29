@@ -1,5 +1,7 @@
 package br.com.pauloceami.treinosacademy.lealapp.Repository;
 
+import static br.com.pauloceami.treinosacademy.lealapp.Utils.Util.TAG_LEALAPPS;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -17,14 +19,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.List;
 
 import br.com.pauloceami.treinosacademy.lealapp.Model.Exercicio;
-import br.com.pauloceami.treinosacademy.lealapp.Model.Treino;
 
 public class ExercicioRepository {
 
     public static final String TAG = "LealApp";
     public static final String COLLECTION_EXERCICIO = "exercicio";
     private FirebaseFirestore db;
-    private CollectionReference exercicioRef;
+    private CollectionReference collectionRef;
     private onFireStoreTaskComplete onFireStoreTaskComplete;
 
     private MutableLiveData<Boolean> isSavedMutableLiveData;
@@ -34,14 +35,13 @@ public class ExercicioRepository {
     public ExercicioRepository(onFireStoreTaskComplete onFireStoreTaskComplete) {
         this.onFireStoreTaskComplete = onFireStoreTaskComplete;
         db = FirebaseFirestore.getInstance();
-        exercicioRef = db.collection(COLLECTION_EXERCICIO);
+        collectionRef = db.collection(COLLECTION_EXERCICIO);
         isSavedMutableLiveData = new MutableLiveData<>();
         isDeleted = new MutableLiveData<>();
     }
 
     public void getExercicios(String id_treino) {
-        exercicioRef
-                .whereEqualTo("id_treino", id_treino)
+        collectionRef.whereEqualTo("treino_id", id_treino.toString().trim())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -62,14 +62,55 @@ public class ExercicioRepository {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         isSavedMutableLiveData.postValue(true);
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        Log.i(TAG_LEALAPPS, "DocumentSnapshot added with ID: " + documentReference.getId());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         isSavedMutableLiveData.postValue(false);
-                        Log.w(TAG, "Error adding document", e);
+                        Log.i(TAG_LEALAPPS, "Error adding document", e);
+                    }
+                });
+    }
+
+    public void update(Exercicio exercicio) {
+        db.collection(COLLECTION_EXERCICIO).document(exercicio.getExercicio_id())
+                .set(exercicio)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            isSavedMutableLiveData.postValue(true);
+                        } else {
+                            isSavedMutableLiveData.postValue(false);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        isSavedMutableLiveData.postValue(false);
+                        Log.i(TAG_LEALAPPS, "Error adding document", e);
+                    }
+                });
+    }
+
+    public void delete(String idDocument) {
+        db.collection(COLLECTION_EXERCICIO).document(idDocument)
+                .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            isDeleted.postValue(true);
+                        } else {
+                            isDeleted.postValue(false);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        isDeleted.postValue(false);
                     }
                 });
     }

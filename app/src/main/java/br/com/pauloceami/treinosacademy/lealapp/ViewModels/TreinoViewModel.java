@@ -38,8 +38,8 @@ public class TreinoViewModel extends ViewModel implements TreinoRepository.onFir
         treinoRepository.update(t);
     }
 
-    public void delete(String id) {
-        treinoRepository.delete(id);
+    public void delete(String idDcument) {
+        treinoRepository.delete(idDcument);
     }
 
 

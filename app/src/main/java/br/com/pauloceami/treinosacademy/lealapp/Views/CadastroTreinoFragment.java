@@ -1,5 +1,7 @@
 package br.com.pauloceami.treinosacademy.lealapp.Views;
 
+import static br.com.pauloceami.treinosacademy.lealapp.Utils.Util.TREINO_SERIALIZABLE;
+
 import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -66,7 +68,7 @@ public class CadastroTreinoFragment extends Fragment implements View.OnClickList
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mTreino = (Treino) bundle.getSerializable("treino");
+            mTreino = (Treino) bundle.getSerializable(TREINO_SERIALIZABLE);
         }
 
         // observer is saved ?

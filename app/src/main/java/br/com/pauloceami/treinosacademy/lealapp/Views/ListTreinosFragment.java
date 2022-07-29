@@ -1,5 +1,7 @@
 package br.com.pauloceami.treinosacademy.lealapp.Views;
 
+import static br.com.pauloceami.treinosacademy.lealapp.Utils.Util.TREINO_SERIALIZABLE;
+
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -160,7 +162,7 @@ public class ListTreinosFragment extends Fragment {
                                         switch (i) {
                                             case 0:
                                                 Bundle bundle = new Bundle();
-                                                bundle.putSerializable("treino", t);
+                                                bundle.putSerializable(TREINO_SERIALIZABLE, t);
                                                 navController.navigate(R.id.cadastroTreinoFragment, bundle);
                                                 break;
                                             case 1:

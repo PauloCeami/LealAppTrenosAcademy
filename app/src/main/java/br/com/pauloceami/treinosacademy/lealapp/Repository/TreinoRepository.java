@@ -1,6 +1,6 @@
 package br.com.pauloceami.treinosacademy.lealapp.Repository;
 
-import static android.content.ContentValues.TAG;
+import static br.com.pauloceami.treinosacademy.lealapp.Utils.Util.TAG_LEALAPPS;
 
 import android.util.Log;
 
@@ -11,17 +11,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import br.com.pauloceami.treinosacademy.lealapp.Model.Treino;
@@ -66,14 +60,14 @@ public class TreinoRepository {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         isSavedMutableLiveData.postValue(true);
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        Log.i(TAG_LEALAPPS, "DocumentSnapshot added with ID: " + documentReference.getId());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         isSavedMutableLiveData.postValue(false);
-                        Log.w(TAG, "Error adding document", e);
+                        Log.i(TAG_LEALAPPS, "Error adding document", e);
                     }
                 });
     }
@@ -94,13 +88,13 @@ public class TreinoRepository {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         isSavedMutableLiveData.postValue(false);
-                        Log.w(TAG, "Error adding document", e);
+                        Log.i(TAG_LEALAPPS, "Error adding document", e);
                     }
                 });
     }
 
-    public void delete(String id) {
-        db.collection(COLLECTION_TREINO).document(id)
+    public void delete(String idDocument) {
+        db.collection(COLLECTION_TREINO).document(idDocument)
                 .delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
