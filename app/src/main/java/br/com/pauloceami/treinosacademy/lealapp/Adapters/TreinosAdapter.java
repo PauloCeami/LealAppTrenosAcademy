@@ -25,16 +25,6 @@ public class TreinosAdapter extends RecyclerView.Adapter<TreinosAdapter.MyViewHo
 
     private List<Treino> treinoList;
 
-    private Dialog dialog;
-
-    public interface Dialog {
-        void onClick(int pos);
-    }
-
-    public void setDialog(Dialog dialog) {
-        this.dialog = dialog;
-    }
-
     public void setTreinoList(List<Treino> treinoList) {
         this.treinoList = treinoList;
     }
@@ -51,15 +41,9 @@ public class TreinosAdapter extends RecyclerView.Adapter<TreinosAdapter.MyViewHo
         Treino t = treinoList.get(position);
         holder.txv_nome.setText(t.getNome());
         holder.txv_descricao.setText(t.getDescricao());
-
         Long d = t.getData().getSeconds();
         Date de = new Date(d * 1000);
         holder.txv_data.setText(de.toString());
-
-//        Picasso.get()
-//                .load(urlImage)
-//                .error(R.drawable.img_notfound)
-//                .into(holder.imageView);
     }
 
     @Override
@@ -82,14 +66,6 @@ public class TreinosAdapter extends RecyclerView.Adapter<TreinosAdapter.MyViewHo
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (dialog != null) {
-                        dialog.onClick(getLayoutPosition());
-                    }
-                }
-            });
         }
 
     }

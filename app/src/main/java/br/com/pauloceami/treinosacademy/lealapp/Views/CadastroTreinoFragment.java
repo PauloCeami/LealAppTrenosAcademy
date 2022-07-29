@@ -123,7 +123,7 @@ public class CadastroTreinoFragment extends Fragment implements View.OnClickList
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                navController.navigate(R.id.listTreinos);
+                navController.navigate(R.id.homeFragment);
                 return true;
             case R.id.addExercicios:
                 return true;

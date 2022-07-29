@@ -1,5 +1,6 @@
 package br.com.pauloceami.treinosacademy.lealapp.Views;
 
+import android.app.Application;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -24,50 +25,56 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.pauloceami.treinosacademy.lealapp.Adapters.TreinosAdapter;
+import br.com.pauloceami.treinosacademy.lealapp.Adapters.ExerciciosAdapter;
+import br.com.pauloceami.treinosacademy.lealapp.Model.Exercicio;
 import br.com.pauloceami.treinosacademy.lealapp.Model.Treino;
 import br.com.pauloceami.treinosacademy.lealapp.R;
 import br.com.pauloceami.treinosacademy.lealapp.Utils.RecyclerItemClickListener;
+import br.com.pauloceami.treinosacademy.lealapp.ViewModels.ExercicioViewModel;
 import br.com.pauloceami.treinosacademy.lealapp.ViewModels.LoggedInViewModel;
-import br.com.pauloceami.treinosacademy.lealapp.ViewModels.TreinoViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ListTreinosFragment extends Fragment {
+public class ListExerciciosFragment extends Fragment {
 
     private NavController navController;
     private LoggedInViewModel loggedInViewModel;
-    private TreinoViewModel treinoViewModel;
-    private TreinosAdapter adapter;
-
-    @BindView(R.id.recycler_view_list_treinos)
-    RecyclerView recycler_view_list_treinos;
-
-    @BindView(R.id.fab_list_treinos)
-    FloatingActionButton fab_list_treinos;
-    private List<Treino> mListTreinos;
+    private ExercicioViewModel exercicioViewModel;
+    private ExerciciosAdapter adapter;
+    @BindView(R.id.recycler_view_list_exercicios)
+    RecyclerView recycler_view_list_exercicios;
+    private Treino mTreino = null;
+    private List<Exercicio> exercicioList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-        treinoViewModel = new ViewModelProvider(this).get(TreinoViewModel.class);
-        loggedInViewModel = new ViewModelProvider(this).get(LoggedInViewModel.class);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            mTreino = (Treino) bundle.getSerializable("treino");
+        }
 
+        navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+
+        exercicioViewModel = new ViewModelProvider(
+                this,
+                new ExercicioViewModel(mTreino.getTreino_id()))
+                .get(ExercicioViewModel.class);
+
+
+        loggedInViewModel = new ViewModelProvider(this).get(LoggedInViewModel.class);
 
         // observer para mutações em register and login
         loggedInViewModel.getUserMutableLiveData().observe(this, new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
                 if (firebaseUser != null) {
-                    //txv.setText("Logado como " + firebaseUser.getEmail());
                 }
             }
         });
@@ -83,7 +90,7 @@ public class ListTreinosFragment extends Fragment {
         });
 
         // is deleted ?
-        treinoViewModel.getIsDeleted().observe(this, new Observer<Boolean>() {
+        exercicioViewModel.getIsDeleted().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isDeleted) {
                 if (isDeleted) {
@@ -94,41 +101,29 @@ public class ListTreinosFragment extends Fragment {
             }
         });
 
-
-        treinoViewModel.getListMutableLiveData().observe(this, new Observer<List<Treino>>() {
+        exercicioViewModel.getListMutableLiveData().observe(this, new Observer<List<Exercicio>>() {
             @Override
-            public void onChanged(List<Treino> treinos) {
-                mListTreinos = treinos;
-                adapter.setTreinoList(treinos);
+            public void onChanged(List<Exercicio> exercicios) {
+                exercicioList = exercicios;
+                adapter.setTreinoList(exercicios);
                 adapter.notifyDataSetChanged();
             }
         });
-
-
-
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_listtreinos, container, false);
+        View v = inflater.inflate(R.layout.fragment_listexercicios, container, false);
         ButterKnife.bind(this, v);
 
         setHasOptionsMenu(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.title_listtreinos);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(getString(R.string.subtitle_listtreinos));
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Exercícios para : " + mTreino.getNome().toString().toUpperCase());
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(getString(R.string.subtitle_listexercicio));
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
         Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(upArrow);
-
-        fab_list_treinos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navController.navigate(R.id.cadastroTreinoFragment);
-            }
-        });
-
         return v;
     }
 
@@ -136,23 +131,22 @@ public class ListTreinosFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        exercicioList = new ArrayList<>();
+        adapter = new ExerciciosAdapter();
 
-        mListTreinos = new ArrayList<>();
-        adapter = new TreinosAdapter();
+        recycler_view_list_exercicios.setLayoutManager(new LinearLayoutManager(getContext()));
+        recycler_view_list_exercicios.setHasFixedSize(true);
+        recycler_view_list_exercicios.setAdapter(adapter);
 
-        recycler_view_list_treinos.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler_view_list_treinos.setHasFixedSize(true);
-        recycler_view_list_treinos.setAdapter(adapter);
-
-        recycler_view_list_treinos.addOnItemTouchListener(
+        recycler_view_list_exercicios.addOnItemTouchListener(
                 new RecyclerItemClickListener(
                         getContext(),
-                        recycler_view_list_treinos,
+                        recycler_view_list_exercicios,
                         new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
-                                Treino t = mListTreinos.get(position);
-                                final CharSequence[] dialogItem = {"Atualizar Treino : " + t.getNome(), "Excluir Treino : " + t.getNome(), "Cadastrar Treino"};
+                                Exercicio e = exercicioList.get(position);
+                                final CharSequence[] dialogItem = {"Atualizar Exercício : " + e.getNome(), "Excluir Exercício : " + e.getNome(), "Cadastrar Exercício"};
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
                                 dialog.setItems(dialogItem, new DialogInterface.OnClickListener() {
                                     @Override
@@ -160,7 +154,7 @@ public class ListTreinosFragment extends Fragment {
                                         switch (i) {
                                             case 0:
                                                 Bundle bundle = new Bundle();
-                                                bundle.putSerializable("treino", t);
+                                                bundle.putSerializable("exercicio", e);
                                                 navController.navigate(R.id.cadastroTreinoFragment, bundle);
                                                 break;
                                             case 1:
@@ -170,8 +164,8 @@ public class ListTreinosFragment extends Fragment {
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         switch (which) {
                                                             case DialogInterface.BUTTON_POSITIVE:
-                                                                treinoViewModel.delete(t.getTreino_id());
-                                                                treinoViewModel.getData();
+                                                                //treinoViewModel.delete(t.getTreino_id());
+                                                                //treinoViewModel.getData();
                                                                 break;
 
                                                             case DialogInterface.BUTTON_NEGATIVE:
@@ -181,20 +175,19 @@ public class ListTreinosFragment extends Fragment {
                                                     }
                                                 };
                                                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                                builder.setMessage("Excluir " + t.getNome() + " ?").setPositiveButton("Sim", dialogClickListener)
+                                                builder.setMessage("Excluir " + e.getNome() + " ?").setPositiveButton("Sim", dialogClickListener)
                                                         .setNegativeButton("Não", dialogClickListener).show();
                                                 break;
 
                                             case 2:
-                                                navController.navigate(R.id.cadastroTreinoFragment);
+                                                navController.navigate(R.id.cadastroExercicio);
                                                 break;
                                             default:
-                                                navController.navigate(R.id.cadastroTreinoFragment);
+                                                Toast.makeText(getContext(), "cadastrar exercicio", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
                                 dialog.show();
-
 
                             }
 
@@ -209,13 +202,11 @@ public class ListTreinosFragment extends Fragment {
                         }
                 )
         );
-
     }
-
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_list_treinos, menu);
+        inflater.inflate(R.menu.menu_list_exercicios, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -224,9 +215,6 @@ public class ListTreinosFragment extends Fragment {
         switch (item.getItemId()) {
             case android.R.id.home:
                 Navigation.findNavController(getView()).navigate(R.id.homeFragment);
-                return true;
-            case R.id.addTReinos:
-                navController.navigate(R.id.cadastroTreinoFragment);
                 return true;
             case R.id.addExercicios:
                 navController.navigate(R.id.cadastroExercicio);

@@ -5,28 +5,50 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/edit_nome"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imv_exercicio"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/img_foto" />
+
+    <TextView
+        android:id="@+id/txv3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/nome_do_treino"
+        android:gravity="center"
+        android:text="clique para selecionar uma imagem" />
+
+    <EditText
+        android:id="@+id/edit_nome_exercicio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:hint="@string/nome_do_exercicio"
         android:inputType="text"
         android:text="" />
 
     <EditText
-        android:id="@+id/edit_descricao"
+        android:id="@+id/edit_observacao_exercicio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/descricao_do_treino"
+        android:hint="@string/observacao_exercicio"
         android:inputType="text"
         android:text="" />
+
+    <Spinner
+        android:id="@+id/sp_treinos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="50dp" />
 
 
     <Button
-        android:id="@+id/btn_cadastrar"
+        android:id="@+id/btn_cadastrar_exercicio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/cadastrar_treino"
+        android:text="@string/cadastrar_cadastrar_exercício"
         android:textAllCaps="false" />
 
 

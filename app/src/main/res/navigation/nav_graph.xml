@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_homeFragment_to_cadastroExercicio"
             app:destination="@id/cadastroExercicio" />
+        <action
+            android:id="@+id/action_homeFragment_to_listExerciciosFragment"
+            app:destination="@id/listExerciciosFragment" />
     </fragment>
     <fragment
         android:id="@+id/listTreinos"
@@ -47,10 +50,18 @@
     </fragment>
     <fragment
         android:id="@+id/cadastroExercicio"
-        android:name="br.com.pauloceami.treinosacademy.lealapp.Views.CadastroExercicio"
+        android:name="br.com.pauloceami.treinosacademy.lealapp.Views.CadastroExercicioFragment"
         android:label="CadastroExercicio" >
         <action
             android:id="@+id/action_cadastroExercicio_to_loginRegisterFragment"
+            app:destination="@id/loginRegisterFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listExerciciosFragment"
+        android:name="br.com.pauloceami.treinosacademy.lealapp.Views.ListExerciciosFragment"
+        android:label="ListExerciciosFragment" >
+        <action
+            android:id="@+id/action_listExerciciosFragment_to_loginRegisterFragment"
             app:destination="@id/loginRegisterFragment" />
     </fragment>
 </navigation>

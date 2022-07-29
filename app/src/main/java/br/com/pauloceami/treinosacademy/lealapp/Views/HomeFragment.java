@@ -90,7 +90,9 @@ public class HomeFragment extends Fragment {
                             @Override
                             public void onItemClick(View view, int position) {
                                 Treino t = mListTreinos.get(position);
-                                Toast.makeText(getContext(), "mostrar exercicios do treino", Toast.LENGTH_SHORT).show();
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("treino", t);
+                                navController.navigate(R.id.listExerciciosFragment, bundle);
                             }
 
                             @Override
